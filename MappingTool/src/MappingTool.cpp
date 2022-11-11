@@ -36,7 +36,7 @@ using namespace glm;
 GLFWwindow* window;
 char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
 int XY_Resolution[2] = { 1024, 768 };
-float Aspect_Ratio = 4 / 3;
+float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
 
 //Booleans
 int freeView = 0, debugMode = 1;
