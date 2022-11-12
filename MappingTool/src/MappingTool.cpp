@@ -100,7 +100,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 }
 
 static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f, -1.0f, 0.0f,
+	-1.0f, -0.6f, 0.0f,
 	1.0f, -1.0f, 0.0f,
 	0.0f, 1.0f, 0.0f
 };
