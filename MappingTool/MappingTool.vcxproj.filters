@@ -18,12 +18,18 @@
     <ClCompile Include="src\MappingTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\shaders\shader.cpp">
+    <ClCompile Include="src\headers\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\headers\dstream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\shaders\shader.hpp">
+    <ClInclude Include="src\headers\shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\dstream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

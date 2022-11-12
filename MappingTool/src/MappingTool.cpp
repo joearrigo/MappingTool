@@ -24,8 +24,6 @@
 #include <GLFW/glfw3.h>
 
 //Others
-#include <iostream>
-#include <sstream>
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -33,7 +31,11 @@
 using namespace glm;
 
 //Shaders
-#include "shaders/shader.hpp"
+#include "headers/shader.hpp"
+
+//Other header includes
+#include "headers/dstream.hpp"
+
 
 #pragma endregion
 
@@ -44,25 +46,6 @@ float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
 
 //Booleans
 int freeView = 0, debugMode = 1;
-
-std::stringstream cout;
-void cPrint() {
-	std::string consoleLog = cout.str();
-	if (consoleLog.length() > 0) {
-		std::cout << consoleLog;
-		cout.str("");
-	}
-}
-
-//Debug print, only print when debug mode is on
-std::stringstream dout;
-void dPrint() {
-	std::string debugLog = dout.str();
-	if (debugLog.length() > 0 && debugMode == 1) {
-		std::cout << debugLog;
-		dout.str("");
-	}
-}
 
 //Set up GLFW (+ window) and GLEW (from: http://www.opengl-tutorial.org/)
 int initialize() {
@@ -98,7 +81,7 @@ int initialize() {
 		glfwTerminate();
 		return -1;
 	}
-	cout << Window_Title << " Loaded. GLFW, GLEW initialized.\n";
+	lout << Window_Title << " Loaded. GLFW, GLEW initialized.\n";
 	dout << "Debug Mode Enabled\n";
 }
 
@@ -166,8 +149,7 @@ int main(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		cPrint();
-		dPrint();
+		updConsole();
 	}
 
 	// Cleanup VBO

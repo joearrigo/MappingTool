@@ -133,11 +133,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\headers\dstream.cpp" />
     <ClCompile Include="src\MappingTool.cpp" />
-    <ClCompile Include="src\shaders\shader.cpp" />
+    <ClCompile Include="src\headers\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\shaders\shader.hpp" />
+    <ClInclude Include="src\headers\dstream.hpp" />
+    <ClInclude Include="src\headers\shader.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\frag.shader" />
