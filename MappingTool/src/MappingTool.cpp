@@ -23,14 +23,18 @@
 // Include GLFW
 #include <GLFW/glfw3.h>
 
+//Others
+#include <iostream>
+#include <sstream>
+
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-//Others
-#include <iostream>
-#include <sstream>
+//Shaders
+#include "shaders/shader.hpp"
+
 #pragma endregion
 
 GLFWwindow* window;
@@ -112,23 +116,65 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		toggleFreeView();
 }
 
+static const GLfloat g_vertex_buffer_data[] = {
+	-1.0f, -1.0f, 0.0f,
+	1.0f, -1.0f, 0.0f,
+	0.0f, 1.0f, 0.0f
+};
+
 int main(void) {
 	if (initialize() == -1) {
 		return -1;
 	}
 
 	glfwSetKeyCallback(window, key_callback);
-	
+
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+	GLuint programID = LoadShaders("src/shaders/vert.shader", "src/shaders/frag.shader");
+
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
 	while (!glfwWindowShouldClose(window))
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+		// Draw the triangle !
+		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+		glDisableVertexAttribArray(0);
+
+		glUseProgram(programID);
+
 		glfwSwapBuffers(window);
-		glfwWaitEvents();
+		glfwPollEvents();
 
 		cPrint();
 		dPrint();
 	}
-	
+
+	// Cleanup VBO
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteVertexArrays(1, &VertexArrayID);
+	glDeleteProgram(programID);
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	
