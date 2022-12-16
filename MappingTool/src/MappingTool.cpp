@@ -47,6 +47,7 @@ char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
 int XY_Resolution[2] = { 1024, 768 };
 float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
 
+//A keyType is basically just a vector that stores a keyID int and an actionID int.
 struct keyType {
 	int key, action; 
 	keyType(int keyI, int actionI) { 
@@ -54,15 +55,15 @@ struct keyType {
 		action = actionI; 
 	}
 
+	//Needed so that it can be input into the map (for sorting).
 	bool operator<(const keyType& rhs) const noexcept
 	{
-		// logic here
-		return (key < rhs.key); // for example
+		return (key < rhs.key);
 	}
 };
 
-
-
+//This is the keyMap, the idea is that whenever a key is pressed (or any other action is done to it), a keyType made
+//from that key and action combination is searched in the keyMap to figure out what action to do (e.g. pause menu, fire, etc.)
 std::map<keyType, int> keyBindings = {
 	{keyType(GLFW_KEY_ESCAPE, GLFW_PRESS), CTRL_EXIT},
 	{keyType(GLFW_KEY_Z, GLFW_PRESS), CTRL_FVIEW}
@@ -115,6 +116,7 @@ static void toggleFreeView() {
 	//Do more
 }
 
+//Check which key is keyed and what action is actioned and respond accordingly.
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	int command = keyBindings[keyType(key, action)];
