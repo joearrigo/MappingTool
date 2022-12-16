@@ -24,6 +24,7 @@
 #include <GLFW/glfw3.h>
 
 //Others
+#include <map>
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -36,13 +37,36 @@ using namespace glm;
 //Other header includes
 #include "headers/dstream.hpp"
 
-
 #pragma endregion
+
+#define CTRL_EXIT		000
+#define CTRL_FVIEW		001
 
 GLFWwindow* window;
 char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
 int XY_Resolution[2] = { 1024, 768 };
 float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
+
+struct keyType {
+	int key, action; 
+	keyType(int keyI, int actionI) { 
+		key = keyI; 
+		action = actionI; 
+	}
+
+	bool operator<(const keyType& rhs) const noexcept
+	{
+		// logic here
+		return (key < rhs.key); // for example
+	}
+};
+
+
+
+std::map<keyType, int> keyBindings = {
+	{keyType(GLFW_KEY_ESCAPE, GLFW_PRESS), CTRL_EXIT},
+	{keyType(GLFW_KEY_Z, GLFW_PRESS), CTRL_FVIEW}
+};
 
 //Booleans
 int freeView = 0, debugMode = 1;
@@ -93,10 +117,17 @@ static void toggleFreeView() {
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-		toggleFreeView();
+	int command = keyBindings[keyType(key, action)];
+	switch (command) {
+		case(CTRL_EXIT):
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+			break;
+		case(CTRL_FVIEW):
+			toggleFreeView();
+			break;
+		default:
+			break;
+	}
 }
 
 static const GLfloat g_vertex_buffer_data[] = {
