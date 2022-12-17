@@ -99,13 +99,13 @@ float horizontalAngle = 3.14f;
 float verticalAngle = 0.0f;
 float initialFOV = 45.0f;
 
-float moveSpeed = 0.5f;
-float mouseSpeed = 0.005f;
+float moveSpeed = 5.0f;
+float mouseSpeed = 1.0f;
 
-float lastTime = 0.0f;
+double lastTime = 0.0;
 float deltaTime = 0.0f;
 
-float toggleTime = 0.0f;
+double toggleTime = 0.0;
 
 double xpos, ypos;
 
@@ -162,10 +162,10 @@ static void toggleFreeView() {
 	dout << freeView << "\n";
 }
 
-static void moveCamera(int direction) {
+static void moveCamera(int directionIn) {
 	if (!freeView)
 		return;
-	switch (direction) {
+	switch (directionIn) {
 		case CTRL_FWD:
 			position += direction * deltaTime * moveSpeed;
 			break;
@@ -188,7 +188,7 @@ static void lookCamera() {
 		return;
 	glfwSetCursorPos(window, ((double)XY_Resolution[0]) / 2, ((double)XY_Resolution[1]) / 2);
 	horizontalAngle += mouseSpeed * deltaTime * float(XY_Resolution[0] / 2 - xpos);
-	horizontalAngle += mouseSpeed * deltaTime * float(XY_Resolution[1] / 2 - ypos);
+	verticalAngle += mouseSpeed * deltaTime * float(XY_Resolution[1] / 2 - ypos);
 
 	direction = glm::vec3(
 		cos(verticalAngle) * sin(horizontalAngle),
@@ -223,11 +223,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			toggleFreeView();
 			break;
 		default:
-			if (command == CTRL_FWD || command == CTRL_BACK || command == CTRL_LEFT || command == CTRL_RIGHT) {
-				moveCamera(command);
-				dout << "DELTATIME: " << deltaTime << "\n";
-				dout << "POS: " << position[0] << " " << position[1] << " " << position[2] << "\n";
-			}
 			break;
 	}
 }
@@ -339,12 +334,21 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		deltaTime = float(glfwGetTime() - lastTime);
-		lastTime = deltaTime;
+		lastTime = glfwGetTime();
 
 		glfwGetCursorPos(window, &xpos, &ypos);
 
 		if (freeView)
 			lookCamera();
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			moveCamera(CTRL_FWD);
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			moveCamera(CTRL_LEFT);
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			moveCamera(CTRL_BACK);
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			moveCamera(CTRL_RIGHT);
 
 		MVP = Projection * Camera * Model;
 
@@ -381,6 +385,9 @@ int main(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		updConsole();
+
+		//Framerate limiting (MAX: 60fps)
+		while(float(glfwGetTime() - lastTime) < 1 / 60);
 	}
 
 	// Cleanup VBO
