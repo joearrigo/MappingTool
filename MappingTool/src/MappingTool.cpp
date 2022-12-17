@@ -41,6 +41,10 @@ using namespace glm;
 
 #define CTRL_EXIT		000
 #define CTRL_FVIEW		001
+#define CTRL_FWD		002
+#define CTRL_BACK		003
+#define CTRL_LEFT		004
+#define CTRL_RIGHT 		005
 
 GLFWwindow* window;
 char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
@@ -67,11 +71,15 @@ struct keyType {
 //from that key and action combination is searched in the keyMap to figure out what action to do (e.g. pause menu, fire, etc.)
 std::map<keyType, int> keyBindings = {
 	{keyType(GLFW_KEY_ESCAPE, GLFW_PRESS), CTRL_EXIT},
-	{keyType(GLFW_KEY_Z, GLFW_PRESS), CTRL_FVIEW}
+	{keyType(GLFW_KEY_Z, GLFW_PRESS), CTRL_FVIEW},
+	{keyType(GLFW_KEY_W, GLFW_PRESS), CTRL_FWD},
+	{keyType(GLFW_KEY_S, GLFW_PRESS), CTRL_BACK},
+	{keyType(GLFW_KEY_A, GLFW_PRESS), CTRL_LEFT},
+	{keyType(GLFW_KEY_D, GLFW_PRESS), CTRL_RIGHT}
 };
 
 //Booleans
-int freeView = 0, debugMode = 1;
+int freeView = 0;
 
 //Freeview stuff
 // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -81,11 +89,29 @@ glm::mat4 Camera = glm::lookAt(
 	glm::vec3(0, 0, 0),
 	glm::vec3(0, 1, 0)
 );
-glm::mat4 Model = glm::mat4(1.0f);
-glm::mat4 MVP = Projection * Camera * Model;
+glm::mat4 Model = glm::mat4(1.0f); //eye(4)
+glm::mat4 MVP;
+
+glm::vec3 position = glm::vec3(4, 3, 3); //Initial position, worldspace. TODO: Make 0,0,0
+glm::vec3 direction, right, up;
+
+float horizontalAngle = 3.14f;
+float verticalAngle = 0.0f;
+float initialFOV = 45.0f;
+
+float moveSpeed = 0.5f;
+float mouseSpeed = 0.005f;
+
+float lastTime = 0.0f;
+float deltaTime = 0.0f;
+
+float toggleTime = 0.0f;
+
+double xpos, ypos;
 
 //Set up GLFW (+ window) and GLEW (from: http://www.opengl-tutorial.org/)
 int initialize() {
+	debugStatus = 1;
 	// Initialise GLFW
 	if (!glfwInit())
 	{
@@ -129,9 +155,60 @@ int initialize() {
 }
 
 static void toggleFreeView() {
+	if (glfwGetTime() < 1 + toggleTime)
+		return;
 	freeView = (freeView == 0); //flip value of freeView
+	toggleTime = glfwGetTime();
 	dout << freeView << "\n";
-	//Do more
+}
+
+static void moveCamera(int direction) {
+	if (!freeView)
+		return;
+	switch (direction) {
+		case CTRL_FWD:
+			position += direction * deltaTime * moveSpeed;
+			break;
+		case CTRL_BACK:
+			position -= direction * deltaTime * moveSpeed;
+			break;
+		case CTRL_LEFT:
+			position -= right * deltaTime * moveSpeed;
+			break;
+		case CTRL_RIGHT:
+			position += right * deltaTime * moveSpeed;
+			break;
+		default:
+			break;
+	}
+}
+
+static void lookCamera() {
+	if (!freeView)
+		return;
+	glfwSetCursorPos(window, ((double)XY_Resolution[0]) / 2, ((double)XY_Resolution[1]) / 2);
+	horizontalAngle += mouseSpeed * deltaTime * float(XY_Resolution[0] / 2 - xpos);
+	horizontalAngle += mouseSpeed * deltaTime * float(XY_Resolution[1] / 2 - ypos);
+
+	direction = glm::vec3(
+		cos(verticalAngle) * sin(horizontalAngle),
+		sin(verticalAngle),
+		cos(verticalAngle) * cos(horizontalAngle)
+	);
+
+	right = glm::vec3(
+		sin(horizontalAngle - 3.14f / 2.0f),
+		0,
+		cos(horizontalAngle - 3.14f / 2.0f)
+	);
+
+	glm::vec3 up = glm::cross(right, direction);
+
+	Camera = glm::lookAt(
+		position,
+		position + direction,
+		up
+	);
 }
 
 //Check which key is keyed and what action is actioned and respond accordingly.
@@ -146,6 +223,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			toggleFreeView();
 			break;
 		default:
+			if (command == CTRL_FWD || command == CTRL_BACK || command == CTRL_LEFT || command == CTRL_RIGHT) {
+				moveCamera(command);
+				dout << "DELTATIME: " << deltaTime << "\n";
+				dout << "POS: " << position[0] << " " << position[1] << " " << position[2] << "\n";
+			}
 			break;
 	}
 }
@@ -255,6 +337,16 @@ int main(void) {
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		deltaTime = float(glfwGetTime() - lastTime);
+		lastTime = deltaTime;
+
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		if (freeView)
+			lookCamera();
+
+		MVP = Projection * Camera * Model;
 
 		glUseProgram(programID);
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
