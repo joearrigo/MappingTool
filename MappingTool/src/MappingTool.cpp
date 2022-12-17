@@ -24,6 +24,7 @@
 #include <GLFW/glfw3.h>
 
 //Others
+#include <map>
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -36,14 +37,38 @@ using namespace glm;
 //Other header includes
 #include "headers/dstream.hpp"
 
-
 #pragma endregion
+
+#define CTRL_EXIT		000
+#define CTRL_FVIEW		001
 
 GLFWwindow* window;
 char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
 int XY_Resolution[2] = { 1024, 768 };
 float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
 GLuint programID, MatrixID;
+
+//A keyType is basically just a vector that stores a keyID int and an actionID int.
+struct keyType {
+	int key, action; 
+	keyType(int keyI, int actionI) { 
+		key = keyI; 
+		action = actionI; 
+	}
+
+	//Needed so that it can be input into the map (for sorting).
+	bool operator<(const keyType& rhs) const noexcept
+	{
+		return (key < rhs.key);
+	}
+};
+
+//This is the keyMap, the idea is that whenever a key is pressed (or any other action is done to it), a keyType made
+//from that key and action combination is searched in the keyMap to figure out what action to do (e.g. pause menu, fire, etc.)
+std::map<keyType, int> keyBindings = {
+	{keyType(GLFW_KEY_ESCAPE, GLFW_PRESS), CTRL_EXIT},
+	{keyType(GLFW_KEY_Z, GLFW_PRESS), CTRL_FVIEW}
+};
 
 //Booleans
 int freeView = 0, debugMode = 1;
@@ -109,12 +134,20 @@ static void toggleFreeView() {
 	//Do more
 }
 
+//Check which key is keyed and what action is actioned and respond accordingly.
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-		toggleFreeView();
+	int command = keyBindings[keyType(key, action)];
+	switch (command) {
+		case(CTRL_EXIT):
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+			break;
+		case(CTRL_FVIEW):
+			toggleFreeView();
+			break;
+		default:
+			break;
+	}
 }
 
 // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
