@@ -1,6 +1,6 @@
 /// 
 /// TODO:	| |  1) Render grid of ghost spheres every 1x1 tile unit (size TBD); as in, render white textures with alpha < 1 on spheres
-///			| |  2) Allow movement throughout grid using wasd and mouse_look (toggled on and off using 'z' key)
+///			|X|  2) Allow movement throughout grid using wasd and mouse_look (toggled on and off using 'z' key)
 ///			| |  3) Make listener for mouse click, check if it hits any rendered face (choose the frontmost), if so, return a tag identifying that object.
 ///			| |  4) Allow creation of planes by clicking on ghost spheres and dragging to make shape (kind of like Fusion 360)
 ///			| |  5) Make GUI to contain GLFW window and display available textures on the side (selectable using mouse click).
@@ -51,7 +51,7 @@ namespace fs = std::filesystem;
 #define DEBUG_POSITION	010
 
 GLFWwindow* window;
-char Window_Title[32] = "Untitled Mapping Tool V0.0.1";
+char Window_Title[32] = "Untitled Mapping Tool V0.0.2";
 int XY_Resolution[2] = { 1024, 768 };
 float Aspect_Ratio = XY_Resolution[0] / XY_Resolution[1];
 GLuint programID, modelMatID, projCamMatID;
