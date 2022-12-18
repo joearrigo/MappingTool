@@ -24,6 +24,12 @@
     <ClCompile Include="src\headers\dstream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\headers\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\headers\jTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\shader.hpp">
@@ -32,9 +38,15 @@
     <ClInclude Include="src\headers\dstream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\headers\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\jTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\frag.shader" />
-    <None Include="src\shaders\vert.shader" />
+    <None Include="src\shaders\frag.glsl" />
+    <None Include="src\shaders\vert.glsl" />
   </ItemGroup>
 </Project>

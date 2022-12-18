@@ -16,3 +16,11 @@ void updConsole() {
 		dout.str("");
 	}
 }
+
+void setDebug(int in) {
+	if (in != 0 && in != 1) {
+		dout << "Invalid debugStatus value: " << in << ". Use DEBUG_ON, or DEBUG_OFF" << "\n";
+		return;
+	}
+	debugStatus = in;
+}
