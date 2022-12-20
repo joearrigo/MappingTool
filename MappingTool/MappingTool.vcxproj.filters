@@ -24,10 +24,10 @@
     <ClCompile Include="src\headers\dstream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\headers\model.cpp">
+    <ClCompile Include="src\jgl\jmodule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\headers\jTexture.cpp">
+    <ClCompile Include="src\jgl\jgl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +38,16 @@
     <ClInclude Include="src\headers\dstream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\model.h">
+    <ClInclude Include="src\jgl\jmodule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\jTexture.h">
+    <ClInclude Include="src\jgl\jgl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\jgl\jbufferqueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\jgl\global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

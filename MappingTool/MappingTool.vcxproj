@@ -136,16 +136,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\headers\dstream.cpp" />
-    <ClCompile Include="src\headers\jTexture.cpp" />
-    <ClCompile Include="src\headers\model.cpp" />
+    <ClCompile Include="src\jgl\jgl.cpp" />
+    <ClCompile Include="src\jgl\jmodule.cpp" />
     <ClCompile Include="src\MappingTool.cpp" />
     <ClCompile Include="src\headers\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\dstream.hpp" />
-    <ClInclude Include="src\headers\jTexture.h" />
-    <ClInclude Include="src\headers\model.h" />
     <ClInclude Include="src\headers\shader.hpp" />
+    <ClInclude Include="src\jgl\global.h" />
+    <ClInclude Include="src\jgl\jbufferqueue.h" />
+    <ClInclude Include="src\jgl\jgl.h" />
+    <ClInclude Include="src\jgl\jmodule.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\frag.glsl" />
