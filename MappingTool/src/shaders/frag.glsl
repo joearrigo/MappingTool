@@ -3,7 +3,7 @@
 in vec3 normal;
 in vec2 uv;
 
-//uniform sampler2D tex;
+uniform sampler2D tex;
 
 layout(location = 0) out vec4 diffuseColor;
 
@@ -20,6 +20,6 @@ void main(void)
 	vec4 lightValue = clamp(lightColor * ndotl + ambientLight, 0, 1);
 
 	// finally, sample from the texuture and multiply in the light.
-	//diffuseColor = texture(tex, uv);
-	diffuseColor = vec4(0.5, 0.0, 0.0, 1.0);
+	diffuseColor = texture(tex, uv);
+	//diffuseColor = vec4(0.5, 0.0, 0.0, 1.0);
 }

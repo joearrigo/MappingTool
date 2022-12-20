@@ -159,18 +159,16 @@ void Material::render(GLint progID) {
 		SetupAttribute(1, 3, GL_FLOAT, Vertex, normal);
 		SetupAttribute(2, 2, GL_FLOAT, Vertex, uv);
 
-		/*
+		
 		if (materialIndices[i] < textures.size() && textures[materialIndices[i]]) {
 			bind(textures[materialIndices[i]], GL_TEXTURE0);
 		}
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[materialIndices[i]]->texture);
 
 		GLint uniformA = glGetUniformLocation(progID, "tex");
 		std::cout << "uniformBefore   " << glGetError() << std::endl; // returns 0 (no error)
 		glUniform1i(uniformA, 0);
 		std::cout << "uniformAfter   " << glGetError() << std::endl; // returns 0 (no error)
-		*/
+		
 		bVec.push_back(new BufferContainer(VAOid, indexCounts[i]));
 
 		glBindVertexArray(0);

@@ -81,7 +81,6 @@ void windowSizeCallback(GLFWwindow* window, int width, int height) {
 void glRender() {
 	while (!glVAOs.empty()) {
 		glBindVertexArray(glVAOs.front()->VAO);
-
 		glDrawElements(GL_TRIANGLES, glVAOs.front()->numIndices, GL_UNSIGNED_SHORT, 0);
 		//glDrawArrays(GL_TRIANGLES, 0, glVAOs.front()->numIndices);
 		glBindVertexArray(0);
