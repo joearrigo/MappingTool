@@ -23,7 +23,7 @@
 
 jglVariables* glWindow = new jglVariables();
 jglCamera camera = jglCamera(45, glm::vec3(4, 3, 3), glm::vec3(0, 0, 0));
-jglUserVars* userVars = new jglUserVars("Untitled Mapping Tool V0.0.4");
+jglUserVars* userVars = new jglUserVars("Untitled Mapping Tool V0.0.5");
 float deltaTime;
 
 #pragma endregion
